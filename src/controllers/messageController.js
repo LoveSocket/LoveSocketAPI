@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Message = require('../models/message');
 const User = require('../models/user');
+const LoveRequest = require('../models/loveRequest');
 
 //Send a message
 exports.sendMessage = async (req, res) => {
@@ -13,6 +14,19 @@ exports.sendMessage = async (req, res) => {
       });
     }
 
+    const isMatched = await LoveRequest.findOne({
+      $or: [
+        { senderId: senderId, receiverId: receiverId, status: "Accepted" },
+        { senderId: receiverId, receiverId: senderId, status: "Accepted" }
+      ]
+    });
+    
+    if (!isMatched) {
+      return res.status(400).json({
+        success: false, message: "Both parties must have accepted each other's love request to perform this operation!"
+      });
+    }
+    
     const receiver = await User.findById(receiverId);
     if (!receiver || receiver.isDeleted == true || receiver.deletedAt) {
       return res.status(400).json({
@@ -45,6 +59,19 @@ exports.getMessages = async (req, res) => {
         success: false, message: "Sender ID and Receiver ID are required!"
       });
     }
+
+    const isMatched = await LoveRequest.findOne({
+      $or: [
+        { senderId: senderId, receiverId: receiverId, status: "Accepted" },
+        { senderId: receiverId, receiverId: senderId, status: "Accepted" }
+      ]
+    });
+    
+    if (!isMatched) {
+      return res.status(400).json({
+        success: false, message: "Both parties must have accepted each other's love request to perform this operation!"
+      });
+    }    
 
     const messages = await Message.find({
       $or: [
