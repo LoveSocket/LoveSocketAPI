@@ -1,6 +1,5 @@
 require('dotenv/config');
 const Report = require('../models/report');
-const LoveRequest = require('../models/loveRequest');
 
 // Create a new report
 exports.reportUser = async (req, res) => {
@@ -10,19 +9,6 @@ exports.reportUser = async (req, res) => {
         if (!reportingUser || !reportedUser || !reason) {
             return res.status(400).json({
                 success: false, message: "Reported user, reporting user, and reason are required!"
-            });
-        }
-
-        const isMatched = await LoveRequest.findOne({
-            $or: [
-                { senderId: reportingUser, receiverId: reportedUser, status: "Accepted" },
-                { senderId: reportedUser, receiverId: reportingUser, status: "Accepted" }
-            ]
-        });
-        
-        if (!isMatched) {
-            return res.status(400).json({
-                success: false, message: "Both parties must have accepted each other's love request to perform this operation!"
             });
         }
 
