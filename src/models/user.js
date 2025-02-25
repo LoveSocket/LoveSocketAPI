@@ -3,26 +3,45 @@ const mongoose = require('mongoose');
 const userSchema = new mongoose.Schema({
     firstName:{
         type: String,
-        required:true
+        required: true
     },
     lastName:{
         type: String,
-        required:true
-    },
-    email: {
-        type: String,
-        unique: true
+        required :true
     },
     username: {
         type: String,
+        required: true,
         unique: true
     },
-    password: String,
-    gender: String,
+    email: {
+        type: String,
+        required: true,
+        unique: true
+    },
+    password: {
+        type: String,
+        required: true
+    },
+    // gender:  {
+    //     type: String,
+    //     required: true
+    // },
+    gender: 
+    {
+        type: String,
+        enum: ["Male", "Female", "Other"],
+        required: true 
+    },
     age: Number,
     phone: String,
     bio: String,
-    interestedIn: String,
+    // interestedIn: String,
+    interestedIn: 
+    {
+        type: String, 
+        enum: ["Male", "Female", "Other"]
+    },
     hobbies: [String],
     occupation: String,
     dob: Date,
@@ -33,6 +52,10 @@ const userSchema = new mongoose.Schema({
     isDeleted: {
         type: Boolean,
         default: false
+    },
+    deletedAt: {
+        type: Date,
+        default: null
     }
 }, {timestamps: true});
 
