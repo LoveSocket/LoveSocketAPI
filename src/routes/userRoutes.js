@@ -17,7 +17,7 @@ router.post('/sign-in', signIn);
 
 router.use(authMiddleware);
 
-router.patch('/update-user-profile/:id', updateUser);
+router.patch('/update/:id', updateUser);
 router.get("/users-by-interest", getUsersByInterest);
 router.get('/users-by-hobby', getUsersByHobby);
 router.get('/user/:id', getUserById);

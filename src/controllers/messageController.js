@@ -38,13 +38,13 @@ exports.sendMessage = async (req, res) => {
 
     await newMessage.save();
 
-    res.status(200).json({
+    res.status(201).json({
       success: true, message: "Message sent!", data: newMessage
     });
 
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ 
-      success: false, message: "Failed to send message",error: error.message 
+      success: false, message: "Failed to send message", error: err.message 
     });
   }
 };
@@ -80,11 +80,13 @@ exports.getMessages = async (req, res) => {
       ]
     }).sort({ timestamp: 1 });
 
-    res.status(200).json({ success: true, messages });
+    res.status(200).json({
+      success: true, message: "Operation succesful!", data: messages
+    });
 
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({ 
-      success: false, message: "Failed to fetch messages", error: error.message
+      success: false, message: "Failed to fetch messages", error: err.message
     });
   }
 };
@@ -108,9 +110,36 @@ exports.updateMessage = async (req, res) => {
     message.message = updatedMessage;
     await message.save();
 
-    res.status(200).json({ success: true, message: "Message updated!", data: message });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to update message", error: error.message });
+    res.status(200).json({
+      success: true, message: "Message updated!", data: message
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false, message: "Failed to update message", error: err.message
+    });
+  }
+};
+
+// Mark message as read
+exports.markAsRead = async (req, res) => {
+  try {
+    const { messageId } = req.params;
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+      return res.status(404).json({ success: false, message: "Message not found" });
+    }
+
+    message.read = true;
+    await message.save();
+
+    res.status(200).json({
+      success: true, message: "Message marked as read", data: message
+    });
+  } catch (err) {
+    res.status(500).json({
+      success: false, message: "Failed to mark message as read", error: err.message
+    });
   }
 };
 
@@ -132,26 +161,9 @@ exports.deleteMessage = async (req, res) => {
     await message.save();
 
     res.status(200).json({ success: true, message: "Message deleted!" });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to delete message", error: error.message });
-  }
-};
-
-// Mark message as read
-exports.markAsRead = async (req, res) => {
-  try {
-    const { messageId } = req.params;
-
-    const message = await Message.findById(messageId);
-    if (!message) {
-      return res.status(404).json({ success: false, message: "Message not found" });
-    }
-
-    message.read = true;
-    await message.save();
-
-    res.status(200).json({ success: true, message: "Message marked as read", data: message });
-  } catch (error) {
-    res.status(500).json({ success: false, message: "Failed to mark message as read", error: error.message });
+  } catch (err) {
+    res.status(500).json({
+      success: false, message: "Failed to delete message", error: err.message
+    });
   }
 };

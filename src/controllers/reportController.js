@@ -15,7 +15,7 @@ exports.reportUser = async (req, res) => {
         const report = new Report({ reportedUser, reportingUser, reason, description });
         await report.save();
 
-        res.status(200).json({
+        res.status(201).json({
             success: true, message: "Report successfully created!", data: report
         });
     } catch (err) {

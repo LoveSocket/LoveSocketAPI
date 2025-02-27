@@ -15,7 +15,7 @@ router.use(authMiddleware);
 router.post("/", sendMessage);
 router.get("/:senderId/:receiverId", getMessages);
 router.put("/update", updateMessage);
-router.delete("/:messageId", deleteMessage);
 router.patch("/read/:messageId", markAsRead);
+router.delete("/delete/:messageId", deleteMessage);
 
 module.exports = router;

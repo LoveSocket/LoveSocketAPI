@@ -1,16 +1,16 @@
 const User = require('../models/user');
 const Gift = require('../models/gift');
 
+//Send gift
 const sendGift = async (req, res) => {
     try {
         const { receiverId, giftType, message, occasion } = req.body;
         const senderId = req.userInfo.userId;
 
         const receiver = await User.findById(receiverId);
-        if (!receiver) {
+        if (!receiver || receiver.isDeleted == true || receiver.deletedAt) {
             return res.status(400).json({
-                success: false,
-                message: 'User not found'
+                success: false, message:  "User does not exist or has been deleted!"
             });
         }
 
@@ -25,20 +25,16 @@ const sendGift = async (req, res) => {
         await newGift.save();
 
         return res.status(201).json({
-            success: true,
-            message: 'Gift sent successfully',
-            gift: newGift
+            success: true, message: 'Gift sent successfully', data: newGift
         });
     } catch (err) {
         return res.status(500).json({
-            success: false,
-            message: 'Internal server error',
-            error: err.message
+            success: false, message: 'Internal server error', error: err.message
         });
     }
 };
 
-
+//Get gifts
 const getUserGifts = async (req, res) => {
     try {
         const userId = req.userInfo.userId;
@@ -48,15 +44,11 @@ const getUserGifts = async (req, res) => {
                             .sort({ createdAt: -1 });
         
         return res.status(200).json({
-            success: true,
-            message: 'Gifts retrieved successfully',
-            gifts
+            success: true, message: 'Gifts retrieved successfully', data: gifts
         });
     } catch (err) {
         return res.status(500).json({
-            success: false,
-            message: 'Internal server error',
-            error: err.message
+            success: false, message: 'Internal server error', error: err.message
         });
     }
 };
