@@ -22,7 +22,7 @@ exports.sendLoveRequest = async (req, res) => {
     const receiver = await User.findById(receiverId);
     if (!receiver || receiver.isDeleted == true || receiver.deletedAt) {
       return res.status(400).json({
-        success: false, message: "Receiver does not exist or has been deleted!"
+        success: false, message: "User does not exist or has been deleted!"
       });
     }
 
@@ -37,14 +37,12 @@ exports.sendLoveRequest = async (req, res) => {
     await loveRequest.save();
 
     res.status(201).json({
-      success: true,
-      message: "Love request sent successfully!",
-      data: loveRequest 
+      success: true, message: "Love request sent successfully!", data: loveRequest 
     });
 
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
-      success: false, message: 'Internal server error', error: error.message
+      success: false, message: 'Internal server error', error: err.message
     });
   }
 }
@@ -86,7 +84,7 @@ exports.acceptLoveRequest = async (req, res) => {
       success: true, message: "Love request has been accepted!", data: loveRequest
     });
 
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
       success: false, message: 'Internal server error', error: err.message
     });
@@ -130,7 +128,7 @@ exports.rejectLoveRequest = async (req, res) => {
       success: true, message: "Love request has been rejected!", data: loveRequest
     });
 
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
       success: false, message: 'Internal server error', error: err.message
     });
@@ -181,9 +179,9 @@ exports.getSentPendingLoveRequests = async (req, res) => {
       success: true, message: "Operation successful", data: loveRequestResponse
     });
 
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
-      success: false, message: 'Internal server error', error: error.message
+      success: false, message: 'Internal server error', error: err.message
     });
   }
 }
@@ -230,9 +228,9 @@ exports.getReceivedPendingLoveRequests = async (req, res) => {
     res.status(200).json({
       success: true, message: "Operation successful", data: loveRequestResponse
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
-      success: false, message: 'Internal server error', error: error.message
+      success: false, message: 'Internal server error', error: err.message
     });
   }
 }
@@ -273,9 +271,9 @@ exports.cancelLoveRequest = async (req, res) => {
     return res.status(200).json({
       success: true, message: "Love request has been Cancelled!", data: loveRequest
     });
-  } catch (error) {
+  } catch (err) {
     res.status(500).json({
-      success: false, message: 'Internal server error', error: error.message
+      success: false, message: 'Internal server error', error: err.message
     });
   }
 }
